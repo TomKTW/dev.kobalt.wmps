@@ -59,7 +59,7 @@ tasks {
     named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
         archiveFileName.set("waybackmachineproxy.jar")
         mergeServiceFiles()
-        minimize()
+        // minimize()
         manifest {
             attributes("Main-Class" to "dev.kobalt.waybackmachineproxy.jvm.MainKt")
         }

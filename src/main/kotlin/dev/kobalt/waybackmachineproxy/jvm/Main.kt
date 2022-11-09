@@ -21,18 +21,18 @@ package dev.kobalt.waybackmachineproxy.jvm
 import dev.kobalt.waybackmachineproxy.jvm.cache.CacheRepository
 import dev.kobalt.waybackmachineproxy.jvm.extension.acquireUse
 import dev.kobalt.waybackmachineproxy.jvm.extension.ifLet
-import io.ktor.application.*
 import io.ktor.client.*
 import io.ktor.client.engine.apache.*
-import io.ktor.client.features.*
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import io.ktor.features.*
 import io.ktor.http.*
-import io.ktor.request.*
-import io.ktor.response.*
+import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.statuspages.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
 import io.ktor.util.*
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
@@ -93,10 +93,10 @@ fun main(args: Array<String>) {
                                 status = HttpStatusCode.fromValue(status),
                                 contentType = headers[HttpHeaders.ContentType]?.let { ContentType.parse(it) })
                         } else {
-                            log.info("Request: $archiveUrl")
-                            client.request<HttpStatement>(archiveUrl).execute { response ->
+                            call.application.environment.log.info("Request: $archiveUrl")
+                            client.prepareRequest(archiveUrl).execute { response ->
                                 val timeDiff = response.responseTime.timestamp - response.requestTime.timestamp
-                                log.info("${response.status}: ${response.request.url} (${timeDiff} ms)")
+                                call.application.environment.log.info("${response.status}: ${response.request.url} (${timeDiff} ms)")
                                 /* Respond with content from request if headers contain x-archive-src that should exist only on archived pages. */
                                 if (response.headers.contains(headerXArchiveSrc)) {
                                     val map = mutableMapOf<String, String>()
@@ -131,10 +131,10 @@ fun main(args: Array<String>) {
             }
             /* Install status pages feature to intercept received exceptions. */
             install(StatusPages) {
-                exception<Throwable> {
+                exception { call: ApplicationCall, cause: Throwable ->
                     /* Respond with internal server error response. */
-                    log.warn("${it.javaClass.name}: ${it.message}: ${call.request.uri}")
                     call.respond(HttpStatusCode.InternalServerError)
+                    call.application.environment.log.warn("${cause.javaClass.name}: ${cause.message}: ${call.request.uri}")
                 }
             }
         }

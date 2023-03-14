@@ -20,6 +20,7 @@ package dev.kobalt.waybackmachineproxy.jvm
 
 import dev.kobalt.waybackmachineproxy.jvm.admin.AdminRepository
 import dev.kobalt.waybackmachineproxy.jvm.admin.adminRoute
+import dev.kobalt.waybackmachineproxy.jvm.archive.ArchiveRepository
 import dev.kobalt.waybackmachineproxy.jvm.archive.archiveInterceptor
 import dev.kobalt.waybackmachineproxy.jvm.cache.CacheRepository
 import dev.kobalt.waybackmachineproxy.jvm.extension.ifLet
@@ -74,6 +75,7 @@ fun main(args: Array<String>) {
             install(Routing) {
                 adminUrl?.let { adminRoute(it) }
             }
+            ArchiveRepository.schedule(client, log)
             archiveInterceptor(adminUrl, client)
             /* Install status pages feature to intercept received exceptions. */
             install(StatusPages) {

@@ -1,6 +1,6 @@
 /*
  * dev.kobalt.waybackmachineproxy
- * Copyright (C) 2022 Tom.K
+ * Copyright (C) 2023 Tom.K
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,14 +16,5 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm.admin
+package dev.kobalt.waybackmachineproxy.jvm.extension
 
-import java.time.LocalDateTime
-
-object AdminRepository {
-
-    var timestamp = LocalDateTime.now()
-    var autoRefreshInterval: Int? = null
-    val urlHistory = mutableListOf<String>()
-
-}

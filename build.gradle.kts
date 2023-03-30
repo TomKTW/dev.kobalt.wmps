@@ -99,6 +99,10 @@ dependencies {
     implementation("org.jetbrains.xodus:xodus-environment:2.0.1")
     implementation("dev.kobalt:iflet.lib:0000.00.00.00.00.00.000")
     implementation("dev.kobalt:uid.lib:0000.00.00.00.00.00.000")
+    implementation("com.github.albfernandez:juniversalchardet:2.4.0")
+    implementation("io.ktor:ktor-network-tls-certificates:2.2.3")
+
+
 }
 
 tasks {

@@ -18,7 +18,16 @@
 
 package dev.kobalt.waybackmachineproxy.jvm.extension
 
-import kotlin.concurrent.thread
+import java.nio.ByteBuffer
+import java.nio.charset.Charset
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
-fun onShutdownRequest(method: () -> Unit) =
-    Runtime.getRuntime().addShutdownHook(thread(start = false) { method.invoke() })
+fun String.toInstant(format: String) = runCatching {
+    ZonedDateTime.parse(this, DateTimeFormatter.ofPattern(format).withZone(ZoneOffset.UTC)).toInstant()
+}.getOrNull()
+
+fun String.toCharset(): Charset? = Charset.forName(this)
+
+fun Charset.parse(bytes: ByteArray) = decode(ByteBuffer.wrap(bytes).clear()).toString()

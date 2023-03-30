@@ -1,6 +1,6 @@
 /*
  * dev.kobalt.waybackmachineproxy
- * Copyright (C) 2022 Tom.K
+ * Copyright (C) 2023 Tom.K
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,15 +18,15 @@
 
 package dev.kobalt.waybackmachineproxy.jvm.extension
 
-import kotlinx.coroutines.sync.Semaphore
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 
-suspend fun Semaphore.acquireUse(method: () -> Unit) {
-    try {
-        acquire()
-        method()
-    } catch (e: Throwable) {
-        throw e
-    } finally {
-        release()
-    }
+
+private val parser = csvReader()
+private val writer = csvWriter()
+fun String.fromCsv(): Map<String, String> = parser.readAll(this).associate { it[0] to it[1] }
+
+fun Map<String, String>.toCsv(): String {
+    val test = map { listOf(it.key, it.value) }
+    return writer.writeAllAsString(test)
 }

@@ -16,9 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm.extension
+package dev.kobalt.waybackmachineproxy.jvm.alt
 
-import kotlin.concurrent.thread
+import dev.kobalt.waybackmachineproxy.jvm.database.DatabaseRepository
+import io.ktor.server.application.*
+import io.ktor.util.*
 
-fun onShutdownRequest(method: () -> Unit) =
-    Runtime.getRuntime().addShutdownHook(thread(start = false) { method.invoke() })
+val Application.pageRepository: PageRepository get() = attributes[AttributeKey("PageRepository")]
+val PageRepositoryPlugin = createApplicationPlugin(
+    name = "PageRepository",
+    createConfiguration = ::PageRepositoryConfiguration
+) {
+    application.attributes.put(
+        AttributeKey("PageRepository"),
+        PageRepository(application.attributes[AttributeKey<DatabaseRepository>("Database")])
+    )
+}
+
+class PageRepositoryConfiguration()

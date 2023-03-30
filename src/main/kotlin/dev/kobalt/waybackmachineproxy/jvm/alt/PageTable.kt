@@ -16,9 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm.extension
+package dev.kobalt.waybackmachineproxy.jvm.alt
 
-import kotlin.concurrent.thread
+import dev.kobalt.uid.lib.database.UidTable
+import org.jetbrains.exposed.sql.Column
+import org.jetbrains.exposed.sql.javatime.timestamp
+import org.jetbrains.exposed.sql.statements.api.ExposedBlob
+import java.time.Instant
 
-fun onShutdownRequest(method: () -> Unit) =
-    Runtime.getRuntime().addShutdownHook(thread(start = false) { method.invoke() })
+object PageTable : UidTable("page") {
+    val url: Column<String> = varchar("url", 255)
+    val timestamp: Column<Instant> = timestamp("timestamp")
+    val code: Column<Int> = integer("code")
+    val headers: Column<String> = varchar("headers", 65536)
+    val data: Column<ExposedBlob> = blob("data")
+}

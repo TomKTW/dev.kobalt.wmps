@@ -16,9 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm.extension
+package dev.kobalt.waybackmachineproxy.jvm.status
 
-import kotlin.concurrent.thread
+import io.ktor.server.application.*
+import io.ktor.server.plugins.statuspages.*
+import io.ktor.server.response.*
 
-fun onShutdownRequest(method: () -> Unit) =
-    Runtime.getRuntime().addShutdownHook(thread(start = false) { method.invoke() })
+fun StatusPagesConfig.exceptionStatus() = exception { call: ApplicationCall, cause: Throwable ->
+    if (cause.message != "Test") {
+        call.respond(cause.message.orEmpty())
+        cause.printStackTrace()
+    } else {
+
+    }
+}

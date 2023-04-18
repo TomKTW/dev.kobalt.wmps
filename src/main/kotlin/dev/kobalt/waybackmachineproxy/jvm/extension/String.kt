@@ -24,10 +24,13 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
+/** Returns timestamp from string value if it's a valid date, otherwise returns null. */
 fun String.toInstant(format: String) = runCatching {
     ZonedDateTime.parse(this, DateTimeFormatter.ofPattern(format).withZone(ZoneOffset.UTC)).toInstant()
 }.getOrNull()
 
+/** Returns character set with a name given from string value. */
 fun String.toCharset(): Charset? = Charset.forName(this)
 
+/** Returns string value from byte array that was decoded and converted back to string. */ // TODO: This makes no sense to me.
 fun Charset.parse(bytes: ByteArray) = decode(ByteBuffer.wrap(bytes).clear()).toString()

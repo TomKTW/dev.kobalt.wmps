@@ -16,5 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm.extension
+package dev.kobalt.waybackmachineproxy.jvm.exception
 
+import io.ktor.server.application.*
+import io.ktor.server.plugins.statuspages.*
+import io.ktor.server.response.*
+
+/** TODO */
+fun StatusPagesConfig.exceptionStatus() = exception { call: ApplicationCall, cause: Throwable ->
+    if (cause.message != "Test") {
+        call.respond(cause.message.orEmpty())
+        cause.printStackTrace()
+    } else {
+
+    }
+}

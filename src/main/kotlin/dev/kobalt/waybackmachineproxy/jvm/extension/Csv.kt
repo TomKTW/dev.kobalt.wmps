@@ -21,11 +21,17 @@ package dev.kobalt.waybackmachineproxy.jvm.extension
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 
-
+/** Instance of CSV parser. */
 private val parser = csvReader()
-private val writer = csvWriter()
-fun String.fromCsv(): Map<String, String> = parser.readAll(this).associate { it[0] to it[1] }
 
+/** Instance of CSV writer. */
+private val writer = csvWriter()
+
+/** Returns a map of strings from a string containing CSV data. */
+fun String.fromCsv(): Map<String, String> =
+    runCatching { parser.readAll(this).associate { it[0] to it[1] } }.getOrNull() ?: emptyMap()
+
+/** Returns a string in CSV format from a map of strings. */
 fun Map<String, String>.toCsv(): String {
     val test = map { listOf(it.key, it.value) }
     return writer.writeAllAsString(test)

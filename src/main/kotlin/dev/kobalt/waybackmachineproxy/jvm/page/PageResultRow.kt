@@ -16,23 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm.alt
+package dev.kobalt.waybackmachineproxy.jvm.page
 
-import dev.kobalt.uid.lib.entity.Uid
 import dev.kobalt.waybackmachineproxy.jvm.extension.fromCsv
 import org.jetbrains.exposed.sql.ResultRow
-import java.time.Instant
 
-class PageEntity(
-    val id: Long,
-    val uid: Uid,
-    val url: String,
-    val timestamp: Instant,
-    val code: Int,
-    val headers: Map<String, String>,
-    val data: ByteArray
-)
-
+/** Returns page entity from given result. */
 fun ResultRow.toPageEntity(): PageEntity {
     return PageEntity(
         id = this[PageTable.id].value,

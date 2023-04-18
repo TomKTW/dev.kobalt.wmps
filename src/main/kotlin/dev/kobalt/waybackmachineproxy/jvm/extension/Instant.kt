@@ -16,18 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm.alt
+package dev.kobalt.waybackmachineproxy.jvm.extension
 
-import dev.kobalt.uid.lib.database.UidTable
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.javatime.timestamp
-import org.jetbrains.exposed.sql.statements.api.ExposedBlob
 import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
-object PageTable : UidTable("page") {
-    val url: Column<String> = varchar("url", 255)
-    val timestamp: Column<Instant> = timestamp("timestamp")
-    val code: Column<Int> = integer("code")
-    val headers: Column<String> = varchar("headers", 65536)
-    val data: Column<ExposedBlob> = blob("data")
-}
+/** Returns string value of timestamp in given pattern and specific time zone, UTC by default. */
+fun Instant.format(pattern: String, zone: ZoneOffset = ZoneOffset.UTC) =
+    DateTimeFormatter.ofPattern(pattern).withZone(zone).format(this).orEmpty()

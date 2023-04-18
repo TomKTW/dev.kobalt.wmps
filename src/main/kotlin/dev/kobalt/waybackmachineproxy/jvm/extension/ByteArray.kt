@@ -18,8 +18,10 @@
 
 package dev.kobalt.waybackmachineproxy.jvm.extension
 
-import kotlin.concurrent.thread
+import org.mozilla.universalchardet.UniversalDetector
+import java.nio.charset.Charset
 
-/** Adds a shutdown hook that will be invoked when JVM is being stopped. */
-fun onShutdownRequest(method: () -> Unit) =
-    Runtime.getRuntime().addShutdownHook(thread(start = false) { method.invoke() })
+/** Returns character set from given byte array if detected. */
+fun ByteArray.parseCharset(): Charset? {
+    return inputStream().use { UniversalDetector.detectCharset(it) }.toCharset()
+}

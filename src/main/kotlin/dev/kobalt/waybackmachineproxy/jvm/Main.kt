@@ -19,12 +19,12 @@
 package dev.kobalt.waybackmachineproxy.jvm
 
 import dev.kobalt.iflet.lib.extension.ifLet
-import dev.kobalt.waybackmachineproxy.jvm.alt.PageRepositoryPlugin
-import dev.kobalt.waybackmachineproxy.jvm.archiveinterceptor.ArchiveInterceptorPlugin
-import dev.kobalt.waybackmachineproxy.jvm.database.DatabaseRepositoryPlugin
+import dev.kobalt.waybackmachineproxy.jvm.archive.ArchivePlugin
+import dev.kobalt.waybackmachineproxy.jvm.database.DatabasePlugin
+import dev.kobalt.waybackmachineproxy.jvm.exception.exceptionStatus
 import dev.kobalt.waybackmachineproxy.jvm.extension.onShutdownRequest
 import dev.kobalt.waybackmachineproxy.jvm.extension.toInstant
-import dev.kobalt.waybackmachineproxy.jvm.status.exceptionStatus
+import dev.kobalt.waybackmachineproxy.jvm.page.PagePlugin
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit
 
 fun main(args: Array<String>) {
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
-    val parser = ArgParser("waybackmachineproxy").apply { }
+    val parser = ArgParser("waybackmachineproxy")
     val timestamp by parser.option(ArgType.String, "timestamp", null, null)
     val httpServerPort by parser.option(ArgType.Int, "httpServerPort", null, null)
     val httpServerHost by parser.option(ArgType.String, "httpServerHost", null, null)
@@ -58,9 +58,9 @@ fun main(args: Array<String>) {
             install(CallLogging) { level = Level.INFO }
             install(Compression) { gzip() }
             install(StatusPages) { exceptionStatus() }
-            install(DatabaseRepositoryPlugin)
-            install(PageRepositoryPlugin)
-            install(ArchiveInterceptorPlugin) { this.timestamp = defaultTimestamp }
+            install(DatabasePlugin)
+            install(PagePlugin)
+            install(ArchivePlugin) { this.timestamp = defaultTimestamp }
         }.apply {
             onShutdownRequest { stop(0, 10, TimeUnit.SECONDS) }; start(true)
         }

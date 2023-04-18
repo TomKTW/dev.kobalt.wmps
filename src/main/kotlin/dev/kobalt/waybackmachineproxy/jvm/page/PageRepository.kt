@@ -16,36 +16,41 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm.alt
+package dev.kobalt.waybackmachineproxy.jvm.page
 
 import dev.kobalt.uid.lib.entity.Uid
-import dev.kobalt.waybackmachineproxy.jvm.database.DatabaseRepository
+import dev.kobalt.waybackmachineproxy.jvm.database.databaseRepository
 import dev.kobalt.waybackmachineproxy.jvm.extension.toCsv
+import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.statements.api.ExposedBlob
 import java.time.Instant
 
-
+/** Repository for managing page entities. */
 class PageRepository(
-    val database: DatabaseRepository
+    private val application: Application
 ) {
 
-    fun selectItemByUrlAndTimestamp(url: String?, timestamp: Instant): PageEntity? = database.transaction {
-        url?.let {
-            PageTable.select { (PageTable.url eq it) and (PageTable.timestamp eq timestamp) }.singleOrNull()
-                ?.toPageEntity()
+    /** Returns page entity from given URL and timestamp. */
+    fun selectItemByUrlAndTimestamp(url: String?, timestamp: Instant): PageEntity? =
+        application.databaseRepository.transaction {
+            url?.let {
+                PageTable.select { (PageTable.url eq it) and (PageTable.timestamp eq timestamp) }.singleOrNull()
+                    ?.toPageEntity()
+            }
         }
-    }
 
-    fun selectItem(uid: Uid): PageEntity? = database.transaction {
+    /** Returns page entity from given UID. */
+    fun selectItem(uid: Uid): PageEntity? = application.databaseRepository.transaction {
         PageTable.select {
             (PageTable.uid eq uid)
         }.singleOrNull()?.toPageEntity()
     }
 
+    /** Saves page entity with given data. */
     fun insertItem(url: String, timestamp: Instant, code: Int, headers: Map<String, String>, data: ByteArray) =
-        database.transaction {
+        application.databaseRepository.transaction {
             PageTable.insertAndGetId {
                 it[PageTable.url] = url
                 it[PageTable.timestamp] = timestamp
@@ -55,6 +60,7 @@ class PageRepository(
             }.let { PageTable.select { PageTable.id eq it }.singleOrNull()?.toPageEntity() }
         }
 
+    /** Updates page entity from given UID with given data. */
     fun updateItem(
         uid: Uid,
         url: String,
@@ -62,7 +68,7 @@ class PageRepository(
         code: Int,
         headers: Map<String, String>,
         data: ByteArray
-    ) = database.transaction {
+    ) = application.databaseRepository.transaction {
         selectItem(uid)?.let { old ->
             PageTable.update(where = { PageTable.uid eq uid }) {
                 if (old.url != url) it[PageTable.url] = url
@@ -74,7 +80,8 @@ class PageRepository(
         } ?: throw Exception()
     }
 
-    fun deleteItem(uid: Uid) = database.transaction {
+    /** Deletes page entity from given UID. */
+    fun deleteItem(uid: Uid) = application.databaseRepository.transaction {
         selectItem(uid)?.let { PageTable.deleteWhere { PageTable.uid eq uid } }
             ?: throw Exception()
     }

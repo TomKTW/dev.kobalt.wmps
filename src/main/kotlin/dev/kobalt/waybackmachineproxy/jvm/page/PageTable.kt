@@ -16,21 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm.alt
+package dev.kobalt.waybackmachineproxy.jvm.page
 
-import dev.kobalt.waybackmachineproxy.jvm.database.DatabaseRepository
-import io.ktor.server.application.*
-import io.ktor.util.*
+import dev.kobalt.uid.lib.database.UidTable
+import org.jetbrains.exposed.sql.Column
+import org.jetbrains.exposed.sql.javatime.timestamp
+import org.jetbrains.exposed.sql.statements.api.ExposedBlob
+import java.time.Instant
 
-val Application.pageRepository: PageRepository get() = attributes[AttributeKey("PageRepository")]
-val PageRepositoryPlugin = createApplicationPlugin(
-    name = "PageRepository",
-    createConfiguration = ::PageRepositoryConfiguration
-) {
-    application.attributes.put(
-        AttributeKey("PageRepository"),
-        PageRepository(application.attributes[AttributeKey<DatabaseRepository>("Database")])
-    )
-}
-
-class PageRepositoryConfiguration()
+/** Table for page entity. */
+object PageTable : UidTable("page") {
+    val url: Column<String> = text("url")
+    val timestamp: Column<Instant> = timestamp("timestamp")
+    val code: Column<Int> = integer("code")
+    val headers: Column<String> = text("headers")
+    val data: Column<ExposedBlob> = blob("data")
+} // Note: YES, it does use BLOB for fuck sakes, this was set up for goddamn convenience!

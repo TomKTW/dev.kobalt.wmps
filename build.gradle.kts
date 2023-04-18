@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.8.0"
+    kotlin("jvm") version "1.8.20"
     id("com.github.johnrengelman.shadow") version "8.1.0"
 }
 
@@ -10,6 +10,10 @@ repositories {
     mavenCentral()
     maven(url = "https://maven.google.com")
     maven(url = "https://tom.kobalt.dev/maven/repository/")
+}
+
+kotlin {
+    jvmToolchain(15)
 }
 
 fun kobalt(module: String, version: String) = "dev.kobalt:$module:$version"
@@ -101,6 +105,7 @@ dependencies {
     implementation("dev.kobalt:uid.lib:0000.00.00.00.00.00.000")
     implementation("com.github.albfernandez:juniversalchardet:2.4.0")
     implementation("io.ktor:ktor-network-tls-certificates:2.2.3")
+    implementation(kotlin("stdlib-jdk8"))
 
 
 }

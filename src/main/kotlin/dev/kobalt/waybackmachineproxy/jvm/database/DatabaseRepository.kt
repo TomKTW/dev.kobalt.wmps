@@ -18,34 +18,26 @@
 
 package dev.kobalt.waybackmachineproxy.jvm.database
 
-import dev.kobalt.waybackmachineproxy.jvm.alt.PageTable
-import io.ktor.server.application.*
-import io.ktor.util.*
+import dev.kobalt.waybackmachineproxy.jvm.page.PageTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Transaction
 
+/** Repository for managing database for archived content. */
 class DatabaseRepository {
 
-    private val database = Database.connect("jdbc:h2:./database;DB_CLOSE_DELAY=-1;", "org.h2.Driver")
+    //private val database = Database.connect("jdbc:h2:./database;DB_CLOSE_DELAY=-1;", "org.h2.Driver")
+    /** Database that is used for storing archived content. */
+    private val database = Database.connect("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;", "org.h2.Driver")
 
     init {
+        // Create table if it's missing.
         transaction { SchemaUtils.createMissingTablesAndColumns(PageTable) }
     }
 
+    /** Submit a database transaction. */
     fun <T> transaction(transaction: Transaction.() -> T): T {
         return org.jetbrains.exposed.sql.transactions.transaction(database) { transaction(this) }
     }
 
-}
-
-class DatabasePluginConfiguration()
-
-val DatabaseRepositoryPlugin = createApplicationPlugin(
-    name = "DatabaseRepository",
-    createConfiguration = ::DatabasePluginConfiguration
-) {
-    application.attributes.put(
-        AttributeKey("Database"), DatabaseRepository()
-    )
 }

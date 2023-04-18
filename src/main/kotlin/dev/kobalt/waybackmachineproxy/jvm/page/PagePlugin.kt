@@ -16,17 +16,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm.status
+package dev.kobalt.waybackmachineproxy.jvm.page
 
 import io.ktor.server.application.*
-import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.response.*
+import io.ktor.util.*
 
-fun StatusPagesConfig.exceptionStatus() = exception { call: ApplicationCall, cause: Throwable ->
-    if (cause.message != "Test") {
-        call.respond(cause.message.orEmpty())
-        cause.printStackTrace()
-    } else {
-
-    }
+/** Plugin to provide page repository. */
+val PagePlugin = createApplicationPlugin(
+    name = PagePluginConfiguration.name,
+    createConfiguration = ::PagePluginConfiguration
+) {
+    // Store page repository object into application.
+    application.attributes.put(
+        AttributeKey(PagePluginConfiguration.name),
+        PageRepository(application)
+    )
 }
+
+/** Configuration for page plugin. */
+class PagePluginConfiguration {
+
+    companion object {
+        const val name = "Page"
+    }
+
+}
+
+/** Page repository instance. */
+val Application.pageRepository: PageRepository get() = attributes[AttributeKey(PagePluginConfiguration.name)]

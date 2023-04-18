@@ -13,7 +13,7 @@ repositories {
 }
 
 kotlin {
-    jvmToolchain(15)
+    jvmToolchain(17)
 }
 
 fun kobalt(module: String, version: String) = "dev.kobalt:$module:$version"
@@ -24,26 +24,26 @@ fun kotlinx(module: String, version: String) = "org.jetbrains.kotlinx:kotlinx-$m
 fun kotlinw(module: String, version: String) = "org.jetbrains.kotlin-wrappers:kotlin-$module:$version"
 
 fun DependencyHandler.httpClient() {
-    implementation(ktor("client-apache", "2.1.3"))
+    implementation(ktor("client-apache", "2.2.4"))
 }
 
 fun DependencyHandler.httpServer() {
-    implementation(ktor("server-cio", "2.2.3"))
-    implementation(ktor("server-netty", "2.1.3"))
-    implementation(ktor("server-core", "2.2.3"))
-    implementation(ktor("server-sessions", "2.2.3"))
-    implementation(ktor("server-forwarded-header", "2.2.3"))
-    implementation(ktor("server-default-headers", "2.2.3"))
-    implementation(ktor("server-caching-headers", "2.2.3"))
-    implementation(ktor("server-call-logging", "2.2.3"))
-    implementation(ktor("server-compression", "2.2.3"))
-    implementation(ktor("server-status-pages", "2.2.3"))
-    implementation(ktor("server-html-builder", "2.1.3"))
+    implementation(ktor("server-cio", "2.2.4"))
+    implementation(ktor("server-netty", "2.2.4"))
+    implementation(ktor("server-core", "2.2.4"))
+    implementation(ktor("server-sessions", "2.2.4"))
+    implementation(ktor("server-forwarded-header", "2.2.4"))
+    implementation(ktor("server-default-headers", "2.2.4"))
+    implementation(ktor("server-caching-headers", "2.2.4"))
+    implementation(ktor("server-call-logging", "2.2.4"))
+    implementation(ktor("server-compression", "2.2.4"))
+    implementation(ktor("server-status-pages", "2.2.4"))
+    implementation(ktor("server-html-builder", "2.2.4"))
 }
 
 fun DependencyHandler.serialization() {
-    implementation(kotlinx("serialization-json", "1.4.1"))
-    implementation(kotlinx("serialization-core", "1.4.1"))
+    implementation(kotlinx("serialization-json", "1.5.0"))
+    implementation(kotlinx("serialization-core", "1.5.0"))
 }
 
 fun DependencyHandler.commandLineInterface() {
@@ -51,7 +51,7 @@ fun DependencyHandler.commandLineInterface() {
 }
 
 fun DependencyHandler.standardLibrary() {
-    implementation(kotlin("stdlib", "1.8.0"))
+    implementation(kotlin("stdlib", "1.8.20"))
 }
 
 fun DependencyHandler.logger() {
@@ -59,7 +59,7 @@ fun DependencyHandler.logger() {
 }
 
 fun DependencyHandler.htmlParser() {
-    implementation(general("org.jsoup:jsoup", "1.14.3"))
+    implementation(general("org.jsoup:jsoup", "1.15.4"))
 }
 
 fun DependencyHandler.htmlDsl() {
@@ -82,7 +82,19 @@ fun DependencyHandler.database() {
 }
 
 fun DependencyHandler.csvParser() {
-    implementation(general("com.github.doyaaaaaken:kotlin-csv-jvm", "1.8.0"))
+    implementation(general("com.github.doyaaaaaken:kotlin-csv-jvm", "1.9.0"))
+}
+
+fun DependencyHandler.ifLet() {
+    implementation(kobalt("iflet.lib", "0000.00.00.00.00.00.000"))
+}
+
+fun DependencyHandler.uid() {
+    implementation(kobalt("uid.lib", "0000.00.00.00.00.00.000"))
+}
+
+fun DependencyHandler.charsetDetect() {
+    implementation(general("com.github.albfernandez:juniversalchardet", "2.4.0"))
 }
 
 dependencies {
@@ -98,16 +110,9 @@ dependencies {
     ormFramework()
     database()
     csvParser()
-    implementation("org.jetbrains.xodus:xodus-openAPI:2.0.1")
-    implementation("org.jetbrains.xodus:xodus-vfs:2.0.1")
-    implementation("org.jetbrains.xodus:xodus-environment:2.0.1")
-    implementation("dev.kobalt:iflet.lib:0000.00.00.00.00.00.000")
-    implementation("dev.kobalt:uid.lib:0000.00.00.00.00.00.000")
-    implementation("com.github.albfernandez:juniversalchardet:2.4.0")
-    implementation("io.ktor:ktor-network-tls-certificates:2.2.3")
-    implementation(kotlin("stdlib-jdk8"))
-
-
+    ifLet()
+    uid()
+    charsetDetect()
 }
 
 tasks {

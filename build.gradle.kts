@@ -39,6 +39,7 @@ fun DependencyHandler.httpServer() {
     implementation(ktor("server-compression", "2.2.4"))
     implementation(ktor("server-status-pages", "2.2.4"))
     implementation(ktor("server-html-builder", "2.2.4"))
+    implementation(ktor("network-tls-certificates", "2.2.4"))
 }
 
 fun DependencyHandler.serialization() {

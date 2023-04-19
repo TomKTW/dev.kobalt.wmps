@@ -34,6 +34,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.consumeEach
 import org.slf4j.LoggerFactory
+import java.net.URLEncoder
 import java.time.Instant
 
 /** Repository for managing archived content from Wayback Machine. */
@@ -69,13 +70,13 @@ class ArchiveRepository(
     }
 
     /** Submits given URL to return page entity that contains archived content at given timestamp. */
-    suspend fun submit(uri: String): PageEntity {
+    suspend fun submit(url: String): PageEntity {
         // If page entity for given URL and timestamp already exists, return it, otherwise, fetch it.
-        return application.pageRepository.selectItemByUrlAndTimestamp(uri, timestamp) ?: runCatching {
+        return application.pageRepository.selectItemByUrlAndTimestamp(url, timestamp) ?: runCatching {
             // Prepare async coroutine for fetching content.
             CoroutineScope(Dispatchers.IO).async(start = CoroutineStart.LAZY) {
                 // Fetch the content for given URL and timestamp.
-                request(uri, timestamp).let {
+                request(url, timestamp).let {
                     // Store the page if the response was valid.
                     application.pageRepository.insertItem(it.url, it.timestamp, it.code, it.headers, it.data)
                 } ?: throw Exception("Test") // Throw the exception if response didn't return valid content.
@@ -85,7 +86,7 @@ class ArchiveRepository(
             }
         }.onFailure { it.printStackTrace() }.getOrElse {
             // On failure, return empty object.
-            PageEntity.empty.copy(url = uri, timestamp = timestamp)
+            PageEntity.empty.copy(url = url, timestamp = timestamp)
         }
     }
 
@@ -96,7 +97,7 @@ class ArchiveRepository(
         // Timestamp value in format to be used in URL.
         val timestampValue = timestamp.format("yyyyMMddhhmmss")
         // URL string that will be requested.
-        val urlString = "https://web.archive.org/web/${timestampValue}id_/${url}"
+        val urlString = "https://web.archive.org/web/${timestampValue}id_/${URLEncoder.encode(url, "UTF-8")}"
         // Response that has been executed with provided request.
         val response = client.prepareRequest(urlString).execute()
         // Difference between response and request time.

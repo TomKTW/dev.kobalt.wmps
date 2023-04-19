@@ -37,7 +37,7 @@ val ArchivePlugin = createApplicationPlugin(
     )
     // Intercept incoming call request event.
     onCall { call ->
-        // On call event, submit URI to repository and respond with data received from it.
+        // On call event, submit URL to repository and respond with data received from it.
         call.application.archiveRepository.submit(call.request.uri).let { page ->
             call.respondBytes(
                 bytes = page.data,

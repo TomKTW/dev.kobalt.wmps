@@ -29,7 +29,6 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.util.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.consumeEach
@@ -116,7 +115,7 @@ class ArchiveRepository(
             // Otherwise, return actual page with content.
             else -> page.copy(
                 code = response.status.value,
-                headers = response.headers.flattenEntries().toMap(),
+                headers = headers,
                 data = when (response.contentType()?.contentType) {
                     // If content type is HTML, process it to match original archived content as much as possible or keep it as is.
                     ContentType.Text.Html.contentType -> runCatching {

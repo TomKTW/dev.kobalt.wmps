@@ -39,6 +39,7 @@ val ArchivePlugin = createApplicationPlugin(
     onCall { call ->
         // On call event, submit URL to repository and respond with data received from it.
         call.application.archiveRepository.submit(call.request.uri).let { page ->
+            page.headers.forEach { (key, value) -> call.response.header(key, value) }
             call.respondBytes(
                 bytes = page.data,
                 status = HttpStatusCode.fromValue(page.code),

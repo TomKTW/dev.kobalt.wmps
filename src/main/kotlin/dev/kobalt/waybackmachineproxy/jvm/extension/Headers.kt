@@ -22,27 +22,26 @@ import io.ktor.http.*
 import io.ktor.util.*
 
 /** Header key that is exists if the page is archived. */
-private val headerXArchiveSrc = "x-archive-src"
+private const val headerXArchiveSrc = "x-archive-src"
 
 /** Prefix of header keys that contain original archived headers. */
-private val headerXArchiveOriginalPrefix = "x-archive-orig-"
+private const val headerXArchiveOriginalPrefix = "x-archive-orig-"
 
 /** Returns true if headers contains a field which indicates that this belongs to archived page.*/
 fun Headers.containsXArchiveValues() = contains(headerXArchiveSrc)
 
 /** Returns a converted map that contains all values belonging to archived page. */
-fun Headers.convertAndFilterToMap() =
-    filter { key, _ -> key.startsWith(headerXArchiveOriginalPrefix) }.flattenEntries().let {
-        if (contains(headerXArchiveSrc)) {
-            val map = mutableMapOf<String, String>()
-            /* Remove x-archive-orig- prefix from headers. */
-            it.map { (key, value) -> key.removePrefix(headerXArchiveOriginalPrefix) to value }
-                /* Remove headers that are not allowed to be modified. */
-                .filter { (key, _) -> !HttpHeaders.isUnsafe(key) }
-                /* Apply archived headers to new response. */
-                .forEach { (key, value) -> map[key] = value }
-            map
-        } else {
-            it.toMap()
+fun Headers.convertAndFilterToMap(): Map<String, String> {
+    val map = mutableMapOf<String, String>()
+    /* Filter headers that start with x-archive-orig- prefix. */
+    filter { key, _ -> key.startsWith(headerXArchiveOriginalPrefix) }.flattenEntries()
+        /* Remove x-archive-orig- prefix from headers. */
+        .map { (key, value) -> key.removePrefix(headerXArchiveOriginalPrefix) to value }
+        /* Remove headers that are not allowed to be modified. */
+        .filter { (key, _) -> !HttpHeaders.isUnsafe(key) }
+        /* Apply archived headers to new response. */
+        .forEach { (key, value) ->
+            map[key] = value
         }
-    }
+    return map
+}

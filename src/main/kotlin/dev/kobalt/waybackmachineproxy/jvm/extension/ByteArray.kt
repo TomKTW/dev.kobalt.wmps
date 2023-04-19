@@ -23,5 +23,7 @@ import java.nio.charset.Charset
 
 /** Returns character set from given byte array if detected. */
 fun ByteArray.parseCharset(): Charset? {
-    return inputStream().use { UniversalDetector.detectCharset(it) }.toCharset()
+    return inputStream().use {
+        runCatching { UniversalDetector.detectCharset(it) }.onFailure { it.printStackTrace() }.getOrNull()
+    }?.toCharset()
 }

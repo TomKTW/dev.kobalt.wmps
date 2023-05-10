@@ -18,16 +18,13 @@
 
 package dev.kobalt.waybackmachineproxy.jvm.exception
 
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 
-/** TODO */
+/** Status response for any thrown exception caught by HTTP server. Stack trace is printed, response will return HTTP 500. */
 fun StatusPagesConfig.exceptionStatus() = exception { call: ApplicationCall, cause: Throwable ->
-    if (cause.message != "Test") {
-        call.respond(cause.message.orEmpty())
-        cause.printStackTrace()
-    } else {
-
-    }
+    cause.printStackTrace()
+    call.respond(HttpStatusCode.Companion.InternalServerError)
 }

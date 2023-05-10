@@ -26,9 +26,11 @@ import org.jetbrains.exposed.sql.Transaction
 /** Repository for managing database for archived content. */
 class DatabaseRepository {
 
-    //private val database = Database.connect("jdbc:h2:./database;DB_CLOSE_DELAY=-1;", "org.h2.Driver")
     /** Database that is used for storing archived content. */
-    private val database = Database.connect("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;", "org.h2.Driver")
+    private val database = Database.connect("jdbc:h2:./database;DB_CLOSE_DELAY=-1;", "org.h2.Driver")
+    // Use for in-memory database.
+    // private val database = Database.connect("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;", "org.h2.Driver")
+
 
     init {
         // Create table if it's missing.

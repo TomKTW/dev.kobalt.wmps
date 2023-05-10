@@ -52,7 +52,7 @@ class ArchiveRepository(
     private val logger = LoggerFactory.getLogger("ktor.application")
 
     /** HTTP client for fetching archived content from Wayback Machine. */
-    private val client = HttpClient(Apache) {
+    private val client = HttpClient(Apache) {// Apache is used as it works well enough.
         /* Disable terminating a response if its status code is not successful. */
         expectSuccess = false
         /* Apply request timeouts to 1 minute. */

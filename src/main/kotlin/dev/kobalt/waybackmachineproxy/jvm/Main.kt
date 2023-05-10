@@ -45,9 +45,11 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.security.auth.x500.X500Principal
 
-
+/** Main method of this application. */
 fun main(args: Array<String>) {
+    // Apply UTC as default time zone.
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
+    // Parse program arguments.
     val parser = ArgParser("waybackmachineproxy")
     val timestamp by parser.option(ArgType.String, "timestamp", null, null)
     val httpServerPort by parser.option(ArgType.Int, "httpServerPort", null, null)
@@ -55,6 +57,7 @@ fun main(args: Array<String>) {
     val httpsServerPort by parser.option(ArgType.Int, "httpsServerPort", null, null)
     val httpsServerHost by parser.option(ArgType.String, "httpsServerHost", null, null)
     parser.parse(args)
+    // Generate keystore file for currently broken HTTPS server implementation.
     val keyStoreFile = File("keystore.jks")
     val keyStoreAlias = "WaybackMachine"
     val keyStorePassword = ""
@@ -69,6 +72,7 @@ fun main(args: Array<String>) {
             domains = listOf("*")
         }
     }.also { it.saveToFile(keyStoreFile, keyStorePassword) }
+    // Prepare HTTP server.
     val environment = applicationEngineEnvironment {
         log = LoggerFactory.getLogger("ktor.application")
         connector {
@@ -98,6 +102,7 @@ fun main(args: Array<String>) {
             install(ArchivePlugin) { this.timestamp = timestamp?.toInstant("yyyy-MM-dd-HH-mm-ss") ?: Instant.now() }
         }
     }
+    // Netty is used as HTTP server as others seem to have broken behavior.
     embeddedServer(Netty, environment) {}.apply {
         onShutdownRequest { stop(0, 10, TimeUnit.SECONDS) }; start(true)
     }

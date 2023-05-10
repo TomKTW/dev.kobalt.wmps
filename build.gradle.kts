@@ -24,22 +24,21 @@ fun kotlinx(module: String, version: String) = "org.jetbrains.kotlinx:kotlinx-$m
 fun kotlinw(module: String, version: String) = "org.jetbrains.kotlin-wrappers:kotlin-$module:$version"
 
 fun DependencyHandler.httpClient() {
-    implementation(ktor("client-apache", "2.2.4"))
+    implementation(ktor("client-apache", "2.3.0"))
 }
 
 fun DependencyHandler.httpServer() {
-    implementation(ktor("server-cio", "2.2.4"))
-    implementation(ktor("server-netty", "2.2.4"))
-    implementation(ktor("server-core", "2.2.4"))
-    implementation(ktor("server-sessions", "2.2.4"))
-    implementation(ktor("server-forwarded-header", "2.2.4"))
-    implementation(ktor("server-default-headers", "2.2.4"))
-    implementation(ktor("server-caching-headers", "2.2.4"))
-    implementation(ktor("server-call-logging", "2.2.4"))
-    implementation(ktor("server-compression", "2.2.4"))
-    implementation(ktor("server-status-pages", "2.2.4"))
-    implementation(ktor("server-html-builder", "2.2.4"))
-    implementation(ktor("network-tls-certificates", "2.2.4"))
+    implementation(ktor("server-netty", "2.3.0"))
+    implementation(ktor("server-core", "2.3.0"))
+    implementation(ktor("server-sessions", "2.3.0"))
+    implementation(ktor("server-forwarded-header", "2.3.0"))
+    implementation(ktor("server-default-headers", "2.3.0"))
+    implementation(ktor("server-caching-headers", "2.3.0"))
+    implementation(ktor("server-call-logging", "2.3.0"))
+    implementation(ktor("server-compression", "2.3.0"))
+    implementation(ktor("server-status-pages", "2.3.0"))
+    implementation(ktor("server-html-builder", "2.3.0"))
+    implementation(ktor("network-tls-certificates", "2.3.0"))
 }
 
 fun DependencyHandler.serialization() {

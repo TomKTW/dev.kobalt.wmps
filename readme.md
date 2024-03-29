@@ -1,11 +1,17 @@
 Wayback Machine Proxy Server
 ===========
 
-This program provides a proxy server to browse the old web through Internet Archive's Wayback Machine.
+Browse the old web through a proxy server that uses Wayback Machine service from Internet Archive.
+
+---
+
+More information is available [here](https://wmps.kobalt.dev).
+
+---
 
 ## Requirements
 
-- Java 8 Runtime
+- Java Runtime Environment, version 17 or later
 
 - Network access to Wayback Machine server
 

@@ -1,2 +1,2 @@
-rootProject.name = "waybackmachineproxy"
-
+rootProject.name = "wmps"
+include("jvm")

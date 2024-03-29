@@ -1,6 +1,6 @@
 /*
- * dev.kobalt.waybackmachineproxy
- * Copyright (C) 2023 Tom.K
+ * dev.kobalt.wmps
+ * Copyright (C) 2024 Tom.K
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,31 +16,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm.page
+package dev.kobalt.wmps.jvm.database
 
 import io.ktor.server.application.*
 import io.ktor.util.*
 
-/** Plugin to provide page repository. */
-val PagePlugin = createApplicationPlugin(
-    name = PagePluginConfiguration.name,
-    createConfiguration = ::PagePluginConfiguration
+/** Plugin to provide database repository. */
+val DatabasePlugin = createApplicationPlugin(
+    name = DatabasePluginConfiguration.name,
+    createConfiguration = ::DatabasePluginConfiguration
 ) {
-    // Store page repository object into application.
+    // Store database repository object into application.
     application.attributes.put(
-        AttributeKey(PagePluginConfiguration.name),
-        PageRepository(application)
+        AttributeKey(DatabasePluginConfiguration.name), DatabaseRepository()
     )
 }
 
-/** Configuration for page plugin. */
-class PagePluginConfiguration {
+/** Configuration for database plugin. */
+class DatabasePluginConfiguration {
 
     companion object {
-        const val name = "Page"
+        const val name = "Database"
     }
 
 }
 
-/** Page repository instance. */
-val Application.pageRepository: PageRepository get() = attributes[AttributeKey(PagePluginConfiguration.name)]
+/** Database repository instance. */
+val Application.databaseRepository: DatabaseRepository get() = attributes[AttributeKey(DatabasePluginConfiguration.name)]

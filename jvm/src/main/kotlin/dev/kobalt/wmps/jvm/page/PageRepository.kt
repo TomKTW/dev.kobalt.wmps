@@ -1,6 +1,6 @@
 /*
- * dev.kobalt.waybackmachineproxy
- * Copyright (C) 2023 Tom.K
+ * dev.kobalt.wmps
+ * Copyright (C) 2024 Tom.K
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,11 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm.page
+package dev.kobalt.wmps.jvm.page
 
 import dev.kobalt.uid.lib.entity.Uid
-import dev.kobalt.waybackmachineproxy.jvm.database.databaseRepository
-import dev.kobalt.waybackmachineproxy.jvm.extension.toCsv
+import dev.kobalt.wmps.jvm.database.databaseRepository
+import dev.kobalt.wmps.jvm.extension.toCsv
 import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq

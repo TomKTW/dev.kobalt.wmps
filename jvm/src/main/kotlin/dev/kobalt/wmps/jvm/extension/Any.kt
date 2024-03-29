@@ -1,6 +1,6 @@
 /*
- * dev.kobalt.waybackmachineproxy
- * Copyright (C) 2023 Tom.K
+ * dev.kobalt.wmps
+ * Copyright (C) 2024 Tom.K
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,15 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm.exception
+package dev.kobalt.wmps.jvm.extension
 
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.response.*
+import kotlin.concurrent.thread
 
-/** Status response for any thrown exception caught by HTTP server. Stack trace is printed, response will return HTTP 500. */
-fun StatusPagesConfig.exceptionStatus() = exception { call: ApplicationCall, cause: Throwable ->
-    cause.printStackTrace()
-    call.respond(HttpStatusCode.Companion.InternalServerError)
-}
+/** Adds a shutdown hook that will be invoked when JVM is being stopped. */
+fun onShutdownRequest(method: () -> Unit) =
+    Runtime.getRuntime().addShutdownHook(thread(start = false) { method.invoke() })

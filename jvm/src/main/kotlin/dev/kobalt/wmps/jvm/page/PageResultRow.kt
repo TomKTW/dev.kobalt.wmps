@@ -1,6 +1,6 @@
 /*
- * dev.kobalt.waybackmachineproxy
- * Copyright (C) 2023 Tom.K
+ * dev.kobalt.wmps
+ * Copyright (C) 2024 Tom.K
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,10 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm.extension
+package dev.kobalt.wmps.jvm.page
 
-import kotlin.concurrent.thread
+import dev.kobalt.wmps.jvm.extension.fromCsv
+import org.jetbrains.exposed.sql.ResultRow
 
-/** Adds a shutdown hook that will be invoked when JVM is being stopped. */
-fun onShutdownRequest(method: () -> Unit) =
-    Runtime.getRuntime().addShutdownHook(thread(start = false) { method.invoke() })
+/** Returns page entity from given result. */
+fun ResultRow.toPageEntity(): PageEntity {
+    return PageEntity(
+        id = this[PageTable.id].value,
+        uid = this[PageTable.uid],
+        url = this[PageTable.url],
+        timestamp = this[PageTable.timestamp],
+        code = this[PageTable.code],
+        headers = this[PageTable.headers].fromCsv(),
+        data = this[PageTable.data].bytes
+    )
+}

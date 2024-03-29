@@ -1,6 +1,6 @@
 /*
- * dev.kobalt.waybackmachineproxy
- * Copyright (C) 2023 Tom.K
+ * dev.kobalt.wmps
+ * Copyright (C) 2024 Tom.K
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,19 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm.page
+package dev.kobalt.wmps.jvm.extension
 
-import dev.kobalt.uid.lib.database.UidTable
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.javatime.timestamp
-import org.jetbrains.exposed.sql.statements.api.ExposedBlob
 import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
-/** Table for page entity. */
-object PageTable : UidTable("page") {
-    val url: Column<String> = text("url")
-    val timestamp: Column<Instant> = timestamp("timestamp")
-    val code: Column<Int> = integer("code")
-    val headers: Column<String> = text("headers")
-    val data: Column<ExposedBlob> = blob("data")
-} // Note: YES, it does use BLOB for fuck sakes, this was set up for goddamn convenience!
+/** Returns string value of timestamp in given pattern and specific time zone, UTC by default. */
+fun Instant.format(pattern: String, zone: ZoneOffset = ZoneOffset.UTC) =
+    DateTimeFormatter.ofPattern(pattern).withZone(zone).format(this).orEmpty()

@@ -1,6 +1,6 @@
 /*
- * dev.kobalt.waybackmachineproxy
- * Copyright (C) 2023 Tom.K
+ * dev.kobalt.wmps
+ * Copyright (C) 2024 Tom.K
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,14 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm
+package dev.kobalt.wmps.jvm
 
-import dev.kobalt.waybackmachineproxy.jvm.archive.ArchivePlugin
-import dev.kobalt.waybackmachineproxy.jvm.database.DatabasePlugin
-import dev.kobalt.waybackmachineproxy.jvm.exception.exceptionStatus
-import dev.kobalt.waybackmachineproxy.jvm.extension.onShutdownRequest
-import dev.kobalt.waybackmachineproxy.jvm.extension.toInstant
-import dev.kobalt.waybackmachineproxy.jvm.page.PagePlugin
+import dev.kobalt.wmps.jvm.archive.ArchivePlugin
+import dev.kobalt.wmps.jvm.database.DatabasePlugin
+import dev.kobalt.wmps.jvm.exception.exceptionStatus
+import dev.kobalt.wmps.jvm.extension.onShutdownRequest
+import dev.kobalt.wmps.jvm.extension.toInstant
+import dev.kobalt.wmps.jvm.page.PagePlugin
 import io.ktor.network.tls.certificates.*
 import io.ktor.network.tls.extensions.*
 import io.ktor.server.application.*
@@ -50,7 +50,7 @@ fun main(args: Array<String>) {
     // Apply UTC as default time zone.
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
     // Parse program arguments.
-    val parser = ArgParser("waybackmachineproxy")
+    val parser = ArgParser("wmps")
     val timestamp by parser.option(ArgType.String, "timestamp", null, null)
     val httpServerPort by parser.option(ArgType.Int, "httpServerPort", null, null)
     val httpServerHost by parser.option(ArgType.String, "httpServerHost", null, null)

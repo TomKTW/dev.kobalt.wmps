@@ -1,6 +1,6 @@
 /*
- * dev.kobalt.waybackmachineproxy
- * Copyright (C) 2023 Tom.K
+ * dev.kobalt.wmps
+ * Copyright (C) 2024 Tom.K
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,20 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.kobalt.waybackmachineproxy.jvm.page
+package dev.kobalt.wmps.jvm.exception
 
-import dev.kobalt.waybackmachineproxy.jvm.extension.fromCsv
-import org.jetbrains.exposed.sql.ResultRow
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.plugins.statuspages.*
+import io.ktor.server.response.*
 
-/** Returns page entity from given result. */
-fun ResultRow.toPageEntity(): PageEntity {
-    return PageEntity(
-        id = this[PageTable.id].value,
-        uid = this[PageTable.uid],
-        url = this[PageTable.url],
-        timestamp = this[PageTable.timestamp],
-        code = this[PageTable.code],
-        headers = this[PageTable.headers].fromCsv(),
-        data = this[PageTable.data].bytes
-    )
+/** Status response for any thrown exception caught by HTTP server. Stack trace is printed, response will return HTTP 500. */
+fun StatusPagesConfig.exceptionStatus() = exception { call: ApplicationCall, cause: Throwable ->
+    cause.printStackTrace()
+    call.respond(HttpStatusCode.Companion.InternalServerError)
 }
